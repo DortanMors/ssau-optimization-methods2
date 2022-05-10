@@ -3,15 +3,13 @@ package com.ssau.lib
 import org.jetbrains.kotlinx.multik.api.d2arrayIndices
 import org.jetbrains.kotlinx.multik.api.linalg.inv
 import org.jetbrains.kotlinx.multik.api.mk
+import org.jetbrains.kotlinx.multik.api.ndarray
 import org.jetbrains.kotlinx.multik.api.zeros
 import org.jetbrains.kotlinx.multik.ndarray.data.D1Array
 import org.jetbrains.kotlinx.multik.ndarray.data.D2Array
 import org.jetbrains.kotlinx.multik.ndarray.data.get
 import org.jetbrains.kotlinx.multik.ndarray.data.set
-import org.jetbrains.kotlinx.multik.ndarray.operations.map
-import org.jetbrains.kotlinx.multik.ndarray.operations.minus
-import org.jetbrains.kotlinx.multik.ndarray.operations.sum
-import org.jetbrains.kotlinx.multik.ndarray.operations.times
+import org.jetbrains.kotlinx.multik.ndarray.operations.*
 import kotlin.math.sqrt
 
 
@@ -20,9 +18,14 @@ typealias Matrix = D2Array<Double>
 
 fun Vector.abs() = sqrt(map { it * it }.sum())
 
-fun Vector(value: Vector) = value.copy()
+fun vector(value: Vector) = value.copy()
 
-fun Vector(size: Int) = mk.zeros<Double>(size)
+fun vector(size: Int) = mk.zeros<Double>(size)
+
+fun vector(vararg numbers: Double) = mk.ndarray(numbers)
+
+fun vector(v: List<Double>) = mk.ndarray(v)
+
 fun gradient(f: (Vector) -> Double, x: Vector, eps: Double): Vector {
     val xL: Vector = x.copy()
     val xR: Vector = x.copy()
@@ -37,6 +40,11 @@ fun gradient(f: (Vector) -> Double, x: Vector, eps: Double): Vector {
     return df
 }
 
+fun matrix(vararg vectors: Vector): Matrix = mk.ndarray(vectors.map { it.toList() })
+
+fun matrix(vararg vectors: List<Double>): Matrix = mk.ndarray(vectors.toList())
+
+fun matrix(a: List<List<Double>>) = mk.ndarray(a)
 fun Vector.asMatrix() = mk.d2arrayIndices(size, size) { row, col ->
     if (row == 0) this[col]
     else 0.0
@@ -86,3 +94,11 @@ fun calcDir(a: Vector, b: Vector) = (b - a).normalized()
 fun Vector.normalized() = (1 / abs()).let { norm -> map { it * norm } }
 
 fun Matrix.invert(): Matrix = mk.linalg.inv(this)
+
+fun Matrix.withRow(vector: Vector) = append(vector).reshape(shape[0]+1, shape[1])
+
+fun Matrix.withColumn(vector: Vector) = withColumn(vector.toList())
+
+fun Matrix.withColumn(list: List<Double>) = mk.d2arrayIndices(shape[0], shape[1] + 1) { i, j ->
+    if (j < shape[1]) this[i][j] else list[i]
+}
