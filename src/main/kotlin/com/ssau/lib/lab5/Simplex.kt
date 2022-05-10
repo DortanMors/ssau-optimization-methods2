@@ -6,13 +6,17 @@ import org.jetbrains.kotlinx.multik.ndarray.data.set
 import org.jetbrains.kotlinx.multik.ndarray.operations.*
 import kotlin.math.abs
 
-class Simplex(private var boundsMatrix: Matrix, private var pricesVector: Vector, initialInequalities: List<Sign>, private var boundsVector: Vector) {
+class Simplex(initialBoundsMatrix: List<List<Double>>, initialPricesVector: List<Double>, initialInequalities: List<Sign>, initialBoundsVector: List<Double>) {
 
+    private var boundsVector: Vector = vector(initialBoundsVector)
+    private var pricesVector: Vector = vector(initialPricesVector)
+    private var boundsMatrix: Matrix = matrix(initialBoundsMatrix)
     private var extremumMode: Extremum = Extremum.Min
-    private var naturalArgsIds: MutableList<Int> = ArrayList()
-    private var basisArgs: MutableList<Int> = ArrayList()
-    private var fModArgs: MutableList<Int> = ArrayList()
-    private var artificialArgsIds: MutableList<Int> = ArrayList()
+    private lateinit var naturalArgsIds: MutableList<Int>
+    private lateinit var basisArgs: MutableList<Int>
+    private lateinit var fModArgs: MutableList<Int>
+    private lateinit var artificialArgsIds: MutableList<Int>
+
     private lateinit var simplexTable: Matrix
     private var inequalities = initialInequalities.toMutableList()
 
@@ -98,6 +102,8 @@ class Simplex(private var boundsMatrix: Matrix, private var pricesVector: Vector
         simplexTable = boundsMatrix.copy()
         naturalArgsIds = ArrayList()
         basisArgs = ArrayList()
+        artificialArgsIds = ArrayList()
+        fModArgs = ArrayList()
 
         // Если среди вектора b есть отрицательные значения, то соответствующие строки
         // матрицы ограничений умножаем на мину один и меняем знак сравнения

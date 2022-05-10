@@ -9,8 +9,8 @@ import org.jetbrains.kotlinx.multik.ndarray.operations.times
 
 object NewtoneRaphson : MinFinderN {
     override fun findMinN(f: (Vector) -> Double, x0: Vector, x1: Vector, eps: Double, maxIterations: Int): Vector {
-        var xI: Vector = Vector(x0)
-        var xI1: Vector = Vector(x0)
+        var xI: Vector = vector(x0)
+        var xI1: Vector = vector(x0)
         var cntr = -1
         while (true) {
             cntr++
