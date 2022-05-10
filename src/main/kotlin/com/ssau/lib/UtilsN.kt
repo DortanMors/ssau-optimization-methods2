@@ -8,7 +8,10 @@ import org.jetbrains.kotlinx.multik.ndarray.data.D1Array
 import org.jetbrains.kotlinx.multik.ndarray.data.D2Array
 import org.jetbrains.kotlinx.multik.ndarray.data.get
 import org.jetbrains.kotlinx.multik.ndarray.data.set
-import org.jetbrains.kotlinx.multik.ndarray.operations.*
+import org.jetbrains.kotlinx.multik.ndarray.operations.map
+import org.jetbrains.kotlinx.multik.ndarray.operations.minus
+import org.jetbrains.kotlinx.multik.ndarray.operations.sum
+import org.jetbrains.kotlinx.multik.ndarray.operations.times
 import kotlin.math.sqrt
 
 
@@ -18,6 +21,8 @@ typealias Matrix = D2Array<Double>
 fun Vector.abs() = sqrt(map { it * it }.sum())
 
 fun Vector(value: Vector) = value.copy()
+
+fun Vector(size: Int) = mk.zeros<Double>(size)
 fun gradient(f: (Vector) -> Double, x: Vector, eps: Double): Vector {
     val xL: Vector = x.copy()
     val xR: Vector = x.copy()
@@ -38,6 +43,10 @@ fun Vector.asMatrix() = mk.d2arrayIndices(size, size) { row, col ->
 }
 
 fun Matrix.asVector() = transpose()[0]
+
+fun Matrix.rows() = shape[0]
+
+fun Matrix.cols() = shape[1]
 
 operator fun Matrix.times(right: Vector): Matrix = this * right.asMatrix()
 
