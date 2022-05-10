@@ -1,9 +1,7 @@
-package com.ssau.lib.lab5
+package com.ssau.lib.simplex
 
-import com.ssau.lib.Vector
 import org.jetbrains.kotlinx.multik.ndarray.data.get
 import kotlin.math.abs
-
 
 fun decimalToRational(value: Double, maxDen: Int = 1000): IntArray {
     var m00: Long = 1

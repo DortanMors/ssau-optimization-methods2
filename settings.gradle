@@ -1,3 +1,6 @@
 
 rootProject.name = 'ssau-optimization-methods'
+include 'src:main:simplex'
+findProject(':src:main:simplex')?.name = 'simplex'
+include 'simplex'
 

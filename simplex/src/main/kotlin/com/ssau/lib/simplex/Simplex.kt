@@ -1,6 +1,5 @@
-package com.ssau.lib.lab5
+package com.ssau.lib.simplex
 
-import com.ssau.lib.*
 import org.jetbrains.kotlinx.multik.ndarray.data.get
 import org.jetbrains.kotlinx.multik.ndarray.data.set
 import org.jetbrains.kotlinx.multik.ndarray.operations.*
