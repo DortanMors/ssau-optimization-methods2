@@ -3,6 +3,7 @@ package com.ssau.lib.simplex
 import org.jetbrains.kotlinx.multik.ndarray.data.get
 import org.jetbrains.kotlinx.multik.ndarray.data.set
 import org.jetbrains.kotlinx.multik.ndarray.operations.*
+import java.io.OutputStream
 import kotlin.math.abs
 
 class Simplex(initialBoundsMatrix: List<List<Double>>, initialPricesVector: List<Double>, initialInequalities: List<Sign>, initialBoundsVector: List<Double>) {
@@ -11,11 +12,11 @@ class Simplex(initialBoundsMatrix: List<List<Double>>, initialPricesVector: List
     private var pricesVector: Vector = vector(initialPricesVector)
     private var boundsMatrix: Matrix = matrix(initialBoundsMatrix)
     private var extremumMode: Extremum = Extremum.Min
+    var output: OutputStream = System.out
     private lateinit var naturalArgsIds: MutableList<Int>
     private lateinit var basisArgs: MutableList<Int>
     private lateinit var fModArgs: MutableList<Int>
     private lateinit var artificialArgsIds: MutableList<Int>
-
     private lateinit var simplexTable: Matrix
     private var inequalities = initialInequalities.toMutableList()
 
@@ -44,7 +45,7 @@ class Simplex(initialBoundsMatrix: List<List<Double>>, initialPricesVector: List
         }
     }
 
-    fun solve(): Vector? {
+    fun solve(): List<Double>? {
         println("Simplex finding $extremumMode")
 
         buildSimplexTable()
@@ -89,7 +90,7 @@ class Simplex(initialBoundsMatrix: List<List<Double>>, initialPricesVector: List
         if (validateSolution()) {
             return currentSimplexSolution(true).also { solution ->
                 println("solution: " + solution.toRationalStr())
-            }
+            }.toList()
             // формирование ответа
         }
         println("Simplex is unresolvable")
@@ -391,4 +392,7 @@ class Simplex(initialBoundsMatrix: List<List<Double>>, initialPricesVector: List
         return solution
     }
 
+    private fun println(text: String) {
+        output.write("$text\n".toByteArray())
+    }
 }
